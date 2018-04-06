@@ -137,6 +137,10 @@ class ConfigureTimeFrame(tk.Frame):
 		self.label['text'] = 'Configuration Settings'
 		self.label.pack(side=tk.TOP)
 		#self.label.grid(row = 0)
+		self.timeInput = ''
+		
+		self.timeConfigBox = Entry(self.master)
+		self.timeConfigBox.pack()
 		
 		#Configure Seconds Button
 		self.btnConfigureSecond = Button(self.master, text = 'Configure Second', command = self.configureSecond)
@@ -170,21 +174,39 @@ class ConfigureTimeFrame(tk.Frame):
 		
 	def configureSecond(self):
 		print('Configuring Seconds...')
+		self.timeInput = self.timeConfigBox.get()
+		config.SECOND_CONFIGURE = int(self.timeInput)
+		print(config.SECOND_CONFIGURE)
 		
 	def configureMinute(self):
 		print('Configuring Minutes...')
+		self.timeInput = self.timeConfigBox.get()
+		config.MINUTE_CONFIGURE = int(self.timeInput)
+		print(config.MINUTE_CONFIGURE)
 	
 	def configureHour(self):
 		print('Configuring Hours...')
+		self.timeInput = self.timeConfigBox.get()
+		config.HOUR_CONFIGURE = int(self.timeInput)
+		print(config.HOUR_CONFIGURE)
 		
 	def configureDay(self):
 		print('Configuring Days...')
+		self.timeInput = self.timeConfigBox.get()
+		config.DAY_CONFIGURE = int(self.timeInput)
+		print(config.DAY_CONFIGURE)
 		
 	def configureMonth(self):
 		print('Configuring Months...')
+		self.timeInput = self.timeConfigBox.get()
+		config.MONTH_CONFIGURE = int(self.timeInput)
+		print(config.MONTH_CONFIGURE)
 		
 	def configureYear(self):
 		print('Configuring Year...')
+		self.timeInput = self.timeConfigBox.get()
+		config.YEAR_CONFIGURE = int(self.timeInput)
+		print(config.YEAR_CONFIGURE)
 
 class Pause(tk.Frame):
 	def __init__(self, master=None):
