@@ -94,8 +94,7 @@ class TemperatureFrame(tk.Frame):
 			self.temperatureLabel.config(fg = 'black')
 			self.after(500, self.flash)
 		else:
-			self.flashCounter = 0
-		
+			self.flashCounter = 0	
 						
 class ThermometerFrame(tk.Frame):
 	def __init__(self, temperature, master=None):
@@ -130,6 +129,62 @@ class TimeFrame(tk.Frame):
 		
 	def updateTime(self, temperature):
 		self.timeLabel['text'] = "{}: {:0>2}/{:0>2}/{:0>2} {:0>2}:{:0>2}:{:0>2}".format(self.label, datetime.now().month, datetime.now().day, datetime.now().year, datetime.now().hour, datetime.now().minute, datetime.now().second)
+		
+class ConfigureTimeFrame(tk.Frame):
+	def __init__(self, master = None):
+		super().__init__(master)
+		self.label = tk.Label(self, font = ('Arial', 20))
+		self.label['text'] = 'Configuration Settings'
+		self.label.pack(side=tk.TOP)
+		#self.label.grid(row = 0)
+		
+		#Configure Seconds Button
+		self.btnConfigureSecond = Button(self.master, text = 'Configure Second', command = self.configureSecond)
+		self.btnConfigureSecond.pack()
+		#self.btnConfigureSecond.grid(row = 1, column = 0)
+		
+		#Configure Minutes Button
+		self.btnConfigureMinute = Button(self.master, text = 'Configure Minute', command = self.configureMinute)
+		self.btnConfigureMinute.pack()
+		#self.btnConfigureMinute.grid(row = 1, column = 1)
+		
+		#Configure Hours Button
+		self.btnConfigureHour = Button(self.master, text = 'Configure Hour', command = self.configureHour)
+		self.btnConfigureHour.pack()
+		#self.btnConfigureHour.grid(row = 1, column = 2)
+		
+		#Configure Days Button
+		self.btnConfigureDay = Button(self.master, text = 'Configure Day', command = self.configureDay)
+		self.btnConfigureDay.pack()
+		#self.btnConfigureDay.grid(row = 2, column = 0)
+		
+		#Configure Months Button
+		self.btnConfigureMonth = Button(self.master, text = 'Configure Month', command = self.configureMonth)
+		self.btnConfigureMonth.pack()
+		#self.btnConfigureMonth.grid(row = 2, column = 1)
+		
+		#Configure Year Button
+		self.btnConfigureYear = Button(self.master, text = 'Configure Year', command = self.configureYear)
+		self.btnConfigureYear.pack()
+		#self.btnConfigureYear.grid(row = 2, column = 2)
+		
+	def configureSecond(self):
+		print('Configuring Seconds...')
+		
+	def configureMinute(self):
+		print('Configuring Minutes...')
+	
+	def configureHour(self):
+		print('Configuring Hours...')
+		
+	def configureDay(self):
+		print('Configuring Days...')
+		
+	def configureMonth(self):
+		print('Configuring Months...')
+		
+	def configureYear(self):
+		print('Configuring Year...')
 
 class Pause(tk.Frame):
 	def __init__(self, master=None):
@@ -170,6 +225,8 @@ class Application(tk.Frame):
 		self.pauseButton.pack()
 		self.timeFrame = TimeFrame(temperature, 'Clock', self)
 		self.timeFrame.pack()
+		self.configurationFrame = ConfigureTimeFrame(self)
+		self.configurationFrame.pack()
 		
 	def windowFlash(self, temperature):
 		self.master.configure(background = 'black')

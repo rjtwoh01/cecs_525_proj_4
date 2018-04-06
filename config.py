@@ -1,8 +1,18 @@
 CRITICAL_TEMPERATURE = 80
 APPLICATION_STATE = 'running'
+
+SECOND_CONFIGURE = False
+MINUTE_CONFIGURE = False
+HOUR_CONFIGURE = False
+DAY_CONFIGURE = False
+MONTH_CONFIGURE = False
+YEAR_CONFIGURE = False
+
 HOURS = 'HOUR'
 MINUTES = 'MINUTE'
 SECONDS = 'SECONDS'
+
+
 address = 0x68
 #bus = smbux.SMBus(1)
 #ser = serial.Serial('/dev/ttyAMA0', 9600, timeout = 1)
