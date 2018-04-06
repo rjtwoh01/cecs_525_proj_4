@@ -11,6 +11,8 @@ import threading
 import config
 from time import sleep
 from datetime import datetime
+import RPi.GPIO as GPIO
+import serial
 
 class Temperature(object):
 	def __init__(self):
@@ -254,18 +256,20 @@ class Application(tk.Frame):
 		self.master.configure(background = 'black')
 		
 class Threads(threading.Thread):
-	def __init__(self, threadID, threadType, temperature, newTemperature, window):
+	def __init__(self, threadID, threadType, temperature, newTemperature, window, ser):
 		threading.Thread.__init__(self)
 		self.threadID = threadID
 		self.threadType = threadType
 		self.temperature = temperature
 		self.newTemperature = newTemperature
 		self.window = window
-		time.sleep(1)
+		time.sleep(.1)
 		
 	def run(self):
-		if (self.threadType == 'temperature'):	
-			self.newTemperature = random.uniform(30, 106)
+		if (self.threadType == 'temperature'):
+			x = ser.read(4)
+			bytes=x.rstrip(b'\x00')
+			self.newTemperature = int(bytes.decode('utf-8'))
 		elif (self.threadType == 'gui'):
 			self.window.update_idletasks()
 			self.window.update()
@@ -298,25 +302,21 @@ if __name__ == '__main__':
 	app = Application(temperature, master = window)
 	newTemperature = 0
 	defaultBackgroundColor = window.cget('bg')
+	ser=serial.Serial('/dev/ttyAMA0')
 
 	while True:
 		if (config.APPLICATION_STATE == 'running'):
-			temperatureThread = Threads(1, 'temperature', temperature, newTemperature, window)
-			temperatureThread.daemon = True #this allows the thread to get killed after it runs
-			temperatureThread.start()
-			newTemperature = temperatureThread.getTemp()
+			x = ser.read(4)
+			bytes=x.rstrip(b'\x00')
+			newTemperature = int(bytes.decode('utf-8'))
 			
 			if (newTemperature >= config.CRITICAL_TEMPERATURE):
+				os.system('aplay ./boing_x.wav')
 				window.configure(background = 'black')
 				time.sleep(.05)
 			
-			#temperatureThread._stop() #undocumented way to stop a thread
-			#newTemperature = random.uniform(30, 106)
 			temperature.setTemperature(int(newTemperature))
-			#print(config.CRITICAL_TEMPERATURE)
-			
-						
-		#guiThread = Threads(1, 'gui', temperature, newTemperature, window)  
+
 		window.update_idletasks()
 		window.update()
 		
@@ -324,7 +324,3 @@ if __name__ == '__main__':
 		
 		window.configure(background = defaultBackgroundColor)  
 		window.update()
-		
-		#guiThread.start()
-
-		#time.sleep(5) #5 second delay
