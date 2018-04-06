@@ -124,12 +124,12 @@ class TimeFrame(tk.Frame):
 		temperature.bind(self.updateTime)
 		
 	def createText(self):
-		self.timeLabel = tk.Label(self.master, text = '{}: 00:00:00'.format(self.label), font = ('Arial', 20))
+		self.timeLabel = tk.Label(self.master, text = '{}: 00/00/00 00:00:00'.format(self.label), font = ('Arial', 20))
 		self.timeLabel.pack()
 		#self.updateTime()
 		
 	def updateTime(self, temperature):
-		self.timeLabel['text'] = "{}: {:0>2}:{:0>2}:{:0>2}".format(self.label, datetime.now().hour, datetime.now().minute, datetime.now().second)
+		self.timeLabel['text'] = "{}: {:0>2}/{:0>2}/{:0>2} {:0>2}:{:0>2}:{:0>2}".format(self.label, datetime.now().month, datetime.now().day, datetime.now().year, datetime.now().hour, datetime.now().minute, datetime.now().second)
 
 class Pause(tk.Frame):
 	def __init__(self, master=None):
