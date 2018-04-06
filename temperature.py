@@ -9,6 +9,8 @@ import os
 import dis
 import threading
 import config
+from time import sleep
+from datetime import datetime
 
 class Temperature(object):
 	def __init__(self):
@@ -27,17 +29,17 @@ class CriticalFrame(tk.Frame):
 	def __init__(self, master=None):
 		super().__init__(master)
 		self.createBox()
-		#tempearture.bind(self.criticalTemp())
+		#temperature.bind(self.criticalTemp())
 		
 	def createBox(self):
 		self.critTempLabel = tk.Label(self.master, font=('Arial', 25))
-		self.critTempLabel.pack(side = tk.LEFT)
+		self.critTempLabel.pack()
 		self.critTempLabel['text'] = "Enter a \nCritical Temperature"
 		self.critTempLabel['fg'] = 'black'
 		self.critTempBox = Entry(self.master)
-		self.critTempBox.pack(side = tk.LEFT)
+		self.critTempBox.pack()
 		self.btnCritTemp = Button(self.master, text = 'Enter', command = self.applyTemp)
-		self.btnCritTemp.pack(side = tk.LEFT)
+		self.btnCritTemp.pack()
 		
 	def applyTemp(self):
 		self.critTemperature = self.critTempBox.get()
@@ -53,10 +55,10 @@ class CriticalFrame(tk.Frame):
 		#b.pack(side='top', fill="y", expand=True)
 
 class TemperatureFrame(tk.Frame):
-	def __init__(self, tempearture, master=None):
+	def __init__(self, temperature, master=None):
 		super().__init__(master)
 		self.createText()
-		tempearture.bind(self.updateTemperature)
+		temperature.bind(self.updateTemperature)
 		self.degree_sign= u'\N{DEGREE SIGN}'
 		self.flashCounter = 0
 
@@ -99,7 +101,7 @@ class ThermometerFrame(tk.Frame):
 	def __init__(self, temperature, master=None):
 		super().__init__(master)
 		self.canvas = tk.Canvas(self, width = 200, height = 800)
-		self.canvas.pack(side = tk.LEFT)
+		self.canvas.pack()
 
 		self.photo = tk.PhotoImage(file = '/home/ryan/thermometer.gif')
 		self.canvas.create_image(100, 300, image = self.photo)
@@ -113,6 +115,21 @@ class ThermometerFrame(tk.Frame):
 		if (self.drawHeight <= 80):
 			self.drawHeight = 80
 		self.canvas.create_line(100, 530, 100, self.drawHeight, width = 35, fill = 'red', tag = 'line')
+		
+class TimeFrame(tk.Frame):
+	def __init__(self, temperature, label = None, master = None, toggeling = False):
+		super().__init__(master)
+		self.label = label
+		self.createText()
+		temperature.bind(self.updateTime)
+		
+	def createText(self):
+		self.timeLabel = tk.Label(self.master, text = '{}: 00:00:00'.format(self.label), font = ('Arial', 20))
+		self.timeLabel.pack()
+		#self.updateTime()
+		
+	def updateTime(self, temperature):
+		self.timeLabel['text'] = "{}: {:0>2}:{:0>2}:{:0>2}".format(self.label, datetime.now().hour, datetime.now().minute, datetime.now().second)
 
 class Pause(tk.Frame):
 	def __init__(self, master=None):
@@ -122,7 +139,7 @@ class Pause(tk.Frame):
 		
 	def createButton(self):
 		self.btnPause = Button(self.master, text = 'PAUSE', command = self.pause)
-		self.btnPause.pack(side = tk.LEFT)
+		self.btnPause.pack()
 		
 	def pause(self):
 		if (self.applicationState == 'running'):
@@ -148,9 +165,11 @@ class Application(tk.Frame):
 		self.temperatureFrame = TemperatureFrame(temperature, self)
 		self.temperatureFrame.pack(side = tk.LEFT)		
 		self.critFrame = CriticalFrame(self)
-		self.critFrame.pack(side = tk.LEFT)	
+		self.critFrame.pack()	
 		self.pauseButton = Pause(self)
-		self.pauseButton.pack(side = tk.LEFT)
+		self.pauseButton.pack()
+		self.timeFrame = TimeFrame(temperature, 'Clock', self)
+		self.timeFrame.pack()
 		
 	def windowFlash(self, temperature):
 		self.master.configure(background = 'black')
@@ -166,7 +185,7 @@ class Threads(threading.Thread):
 		time.sleep(1)
 		
 	def run(self):
-		if (self.threadType == 'temperature'):
+		if (self.threadType == 'temperature'):	
 			self.newTemperature = random.uniform(30, 106)
 		elif (self.threadType == 'gui'):
 			self.window.update_idletasks()
@@ -174,6 +193,23 @@ class Threads(threading.Thread):
 			
 	def getTemp(self):
 		return self.newTemperature
+
+def intToBCD(x):
+	if (x < 0):
+		raise ValueError("Cannot be a negative integer")
+	
+	bcdString = ''
+	while (x > 0):
+		nibble = x % 16
+		bcdString = str(nibble) + bcdString
+		x >>= 4
+	
+	if (bcdString == ''):
+		bcdString = 0
+		
+	bcdInt = int(bcdString)	
+	return bcdInt
+	
 
 if __name__ == '__main__':
 	window = tk.Tk()
