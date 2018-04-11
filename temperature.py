@@ -133,7 +133,7 @@ class TimeFrame(tk.Frame):
         #self.updateTime()
         
     def updateTime(self, temperature):
-        self.timeLabel['text'] = "{}: {:0>2}/{:0>2}/{:0>2} {:0>2}:{:0>2}:{:0>2}".format(self.label, config.MONTH, config.DAY, config.YEAR, config.HOUR, config.MINUTE, config.SECOND)
+        self.timeLabel['text'] = "{}: {:0>2}/{:0>2}/{:0>2} {:0>2}:{:0>2}:{:0>2}".format(self.label, config.MONTH_CONFIGURE, config.DAY_CONFIGURE, config.YEAR, config.HOUR, config.MINUTE, config.SECOND)
         
 class ConfigureTimeFrame(tk.Frame):
     def __init__(self, master = None):
@@ -343,9 +343,6 @@ if __name__ == '__main__':
         config.SECOND = int_to_bcd((bus.read_byte_data(address,0)))
         config.MINUTE = int_to_bcd(bus.read_byte_data(address,1))
         config.HOUR = int_to_bcd(bus.read_byte_data(address,2))
-        config.DAY = int_to_bcd(bus.read_byte_data(address,3))
-        config.MONTH = int_to_bcd(bus.read_byte_data(address,4))
-        config.YEAR = int_to_bcd(bus.read_byte_data(address,5))
         if (config.APPLICATION_STATE == 'running'):
             x = ser.read(4)
             bytes=x.rstrip(b'\x00')
