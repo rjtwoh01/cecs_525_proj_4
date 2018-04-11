@@ -322,7 +322,7 @@ if __name__ == '__main__':
     newTemperature = 0
     defaultBackgroundColor = window.cget('bg')
     ser=serial.Serial('/dev/ttyAMA0')
-
+    
     config.SECOND = convertTime(datetime.now().second)
     config.MINUTE = convertTime(datetime.now().minute)
     config.HOUR = convertTime(datetime.now().hour)
@@ -346,6 +346,9 @@ if __name__ == '__main__':
         config.DAY = int_to_bcd(bus.read_byte_data(address,3))
         config.MONTH = int_to_bcd(bus.read_byte_data(address,4))
         config.YEAR = int_to_bcd(bus.read_byte_data(address,5))
+        print(config.YEAR)
+        print(config.DAY)
+        print(config.HOUR)
         if (config.APPLICATION_STATE == 'running'):
             x = ser.read(4)
             bytes=x.rstrip(b'\x00')
