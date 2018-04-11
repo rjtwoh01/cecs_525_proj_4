@@ -133,7 +133,7 @@ class TimeFrame(tk.Frame):
         #self.updateTime()
         
     def updateTime(self, temperature):
-        self.timeLabel['text'] = "{}: {:0>2}/{:0>2}/{:0>2} {:0>2}:{:0>2}:{:0>2}".format(self.label, config.MONTH_CONFIGURE, config.DAY_CONFIGURE, config.YEAR, config.HOUR, config.MINUTE, config.SECOND)
+        self.timeLabel['text'] = "{}: {:0>2}/{:0>2}/{:0>2} {:0>2}:{:0>2}:{:0>2}".format(self.label, config.MONTH_CONFIGURE, config.DAY_CONFIGURE, config.YEAR_CONFIGURE, config.HOUR, config.MINUTE, config.SECOND)
         
 class ConfigureTimeFrame(tk.Frame):
     def __init__(self, master = None):
@@ -329,6 +329,11 @@ if __name__ == '__main__':
     config.MONTH = convertTime(datetime.now().month)
     config.DAY = convertTime(datetime.now().day)
     config.YEAR = convertTime(datetime.now().year - 2000)
+
+    config.DAY_CONFIGURE = datetime.now().day
+    config.MONTH_CONFIGURE = datetime.now().month
+    config.YEAR_CONFIGURE = datetime.now().year
+    config.HOUR_CONFIGURE = datetime.now().hour
     
     bus.write_byte_data(address,0,config.SECOND)
     bus.write_byte_data(address,1,config.MINUTE)
