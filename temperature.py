@@ -313,6 +313,12 @@ def convertTime(x):
     x = (int(x)//10)*16+(int(x)%10)
     return (x)
 
+def reset(pin):
+    config.YEAR_CONFIGURE = 2018
+    config.MONTH_CONFIGURE = 1
+    config.DAY_CONFIGURE = 1
+    config.HOUR_CONFIGURE = 12
+
 if __name__ == '__main__':
     window = tk.Tk()
     window.wm_title('Temperature')
@@ -343,6 +349,12 @@ if __name__ == '__main__':
     bus.write_byte_data(address,5,config.YEAR)
     bus.write_byte_data(address,6,0)
     bus.write_byte_data(address,14,0)
+
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setup(23, GPIO.IN)
+    GPIO.setup(24, GPIO.IN)
+    GPIO.add_event_detect(23, GPIO.RISING)
+    GPIO.add_event_callback(23, reset)
 
     while True:
         config.SECOND = int_to_bcd((bus.read_byte_data(address,0)))
