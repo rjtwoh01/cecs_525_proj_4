@@ -249,16 +249,20 @@ class Pause(tk.Frame):
         return self.applicationState
 
 class Application(tk.Frame):
-    def __init__(self, temperature, master = None):
+    def __init__(self, temperature, rtcTemp, master = None):
         super().__init__(master)
         self.pack()
-        self.initFrames(temperature)
+        self.initFrames(temperature, rtcTemp)
 
-    def initFrames(self, temperature):
+    def initFrames(self, temperature, rtcTemp):
         self.thermometerFrame = ThermometerFrame(temperature, self)
         self.thermometerFrame.pack(side = tk.LEFT)
         self.temperatureFrame = TemperatureFrame(temperature, self)
-        self.temperatureFrame.pack(side = tk.LEFT)      
+        self.temperatureFrame.pack(side = tk.LEFT)
+        self.rtcThermo = ThermometerFrame(rtcTemp, self)
+        self.rtcThermo.pack(side = tk.LEFT)
+        self.rtcTempFrame = TemperatureFrame(rtcTemp, self)
+        self.rtcTempFrame.pack(side = tk.LEFT)      
         self.critFrame = CriticalFrame(self)
         self.critFrame.pack()   
         self.pauseButton = Pause(self)
@@ -327,9 +331,10 @@ def reset(pin):
 if __name__ == '__main__':
     window = tk.Tk()
     window.wm_title('Temperature')
-    window.geometry('1200x600')
+    window.geometry('1250x600')
     temperature = Temperature()
-    app = Application(temperature, master = window)
+    rtcTemp = Temperature()
+    app = Application(temperature, rtcTemp, master = window)
     newTemperature = 0
     defaultBackgroundColor = window.cget('bg')
     ser=serial.Serial('/dev/ttyAMA0')
@@ -369,14 +374,18 @@ if __name__ == '__main__':
             x = ser.read(4)
             bytes=x.rstrip(b'\x00')
             newTemperature = int(bytes.decode('utf-8'))
+            temperature.setTemperature(int(newTemperature))
+            newRTC = bus.read_byte_data(address, 17)
+            print(newRTC)
+            rtcTemp.setTemperature(int(newRTC * 1.8 + 32))
+            print(int(newRTC * 1.8 + 32))
             
             if (newTemperature >= config.CRITICAL_TEMPERATURE):
                 os.system('aplay ./boing_x.wav')
                 window.configure(background = 'black')
                 time.sleep(.05)
             
-            temperature.setTemperature(int(newTemperature))
-
+            
         window.update_idletasks()
         window.update()
         
